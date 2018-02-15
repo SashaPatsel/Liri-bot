@@ -13,6 +13,9 @@ var spotify = new Spotify(keys.spotify);
 //Omdb
 var request = require('request');
 
+//do-what it says
+var fs = require("fs");
+
 var command = process.argv[2];
 
 if (command === "my-tweets") {
@@ -28,7 +31,7 @@ if (command === "my-tweets") {
     });
 }
 
-
+function songInfo(song) {
 if (command === "spotify-this-song") {
     var song = "";
     var nodeArgs = process.argv;
@@ -62,6 +65,8 @@ if (command === "spotify-this-song") {
     });
 
 }
+}
+songInfo()
 
 if (command === "movie-this") {
     var movie = "";
@@ -81,7 +86,6 @@ if (command === "movie-this") {
     request('https://www.omdbapi.com/?apikey=trilogy&t=' + movie, function(error, response, body) {
         // console.log('error:', error); // Print the error if one occurred
         // console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
-        //console.log("\n#########",JSON.parse(body)); // Print the HTML for the Google homepage.
         // * Title of the movie.
         console.log("Title: " + JSON.parse(body).Title)
         // * Year the movie came out.
@@ -99,4 +103,34 @@ if (command === "movie-this") {
         // * Actors in the movie.
         console.log("Actors: " + JSON.parse(body).Actors)
     });
+}
+
+if (command === "do-what-it-says") {
+
+fs.readFile("random.txt", "utf8", function(error, data) {
+
+  if (error) {
+    return console.log(error);
+  }
+
+  var dataArr = data.split(",");
+
+
+    spotify.search({ type: 'track', query: dataArr[1], limit: 1 }, function(err, data) {
+        if (err) {
+            return console.log('Error occurred: ' + err);
+        }
+
+
+        //Artist(s)
+        console.log("Here are some possible artists: " + data.tracks.items[0].artists[0].name);
+        // The song's name
+        console.log("Song Name: " + data.tracks.items[0].name);
+        // A preview link of the song from Spotify
+        console.log("Here's a link to the song: " + data.tracks.items[0].album.href);
+        // The album that the song is from
+        console.log("Your song is from the " + data.tracks.items[0].album.name + " album");
+    });
+
+});
 }
