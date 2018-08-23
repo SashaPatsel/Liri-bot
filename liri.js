@@ -25,7 +25,9 @@ if (command === "my-tweets") {
         console.log("\nMy latest tweets:")
         // console.log(tweets[0])
         for (var i = 1; i < 22; i++) {
+            if (tweets[i]){
             console.log("\nTweet " + i + ", created at" + tweets[i].created_at + ": " + tweets[i].text);
+            }
         }
 
     });
@@ -134,3 +136,5 @@ fs.readFile("random.txt", "utf8", function(error, data) {
 
 });
 }
+
+//appendFileSync
